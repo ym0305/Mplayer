@@ -1,5 +1,5 @@
-# Mplayer
-练习demo
+# SimplePlayer
+## 初学练手DEMO
 ----------------------------
 # Version 0.1
 - 实现上一曲，下一曲播放功能
