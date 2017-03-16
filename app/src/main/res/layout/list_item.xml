@@ -7,26 +7,32 @@
         android:id="@+id/imageview"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/music" />
+        android:layout_margin="10dp"
+        android:src="@drawable/micon" />
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:weightSum="1">
 
         <TextView
-            android:id="@+id/list_artist"
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:layout_weight="0.59"
-            android:textColor="@color/white" />
-
-        <TextView
             android:id="@+id/list_name"
             android:layout_width="match_parent"
             android:layout_height="24dp"
-            android:textColor="@color/white" />
+            android:layout_gravity="center_vertical"
+            android:textSize="12sp"
+            android:textColor="@color/fontColor_2" />
+
+        <TextView
+            android:id="@+id/list_artist"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:textSize="9sp"
+            android:textColor="@color/fontColor_3"
+            />
 
 
     </LinearLayout>

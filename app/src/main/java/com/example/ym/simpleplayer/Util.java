@@ -37,6 +37,7 @@ public class Util {
                 String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                 String uri = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                 String fileName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
                 int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
 
 
@@ -49,6 +50,7 @@ public class Util {
 
 
 
+                song.setDuration(duration);
                 song.setTitle(title);
                 song.setFileName(fileName);
                 song.setAlbum(album);
@@ -67,7 +69,10 @@ public class Util {
 
 
 
+
         }
+
+        cursor.close();
         return songList;
 
 

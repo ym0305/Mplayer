@@ -3,5 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="white">#fcfcfc</color>
+    <color name="white">#f9f2f2</color>
+    <color name="fontColor">#ffffff</color>
+    <color name="bgColor">#3e8cd4</color>
+    <color name="fontColor_2">#3d3d3d</color>
+    <color name="fontColor_3">#bebebe</color>
 </resources>

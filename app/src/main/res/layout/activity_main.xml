@@ -1,79 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<android.support.v4.widget.DrawerLayout xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerview"
+    android:background="@color/bgColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f6f5951e"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/play_button"></ListView>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+
+            android:background="@color/bgColor"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </android.support.v7.widget.Toolbar>
 
 
 
+
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seekbar"
+            android:thumb="@drawable/position"
+            android:progressBackgroundTint="@color/fontColor"
+            android:progressTint="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/show_name"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.769"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/play_button"
             android:src="@drawable/play"
             android:background="#00ffffff"
-            android:layout_alignParentBottom="true"
-            android:layout_toStartOf="@+id/next_button" />
+            android:layout_alignTop="@+id/pre_button"
+            android:layout_centerHorizontal="true"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintVertical_bias="0.917"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
         <ImageButton
             android:background="#00ffffff"
             android:id="@+id/pre_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/pre"
+            android:src="@drawable/pmusic"
             android:layout_alignParentBottom="true"
-            android:layout_toStartOf="@+id/play_button" />
+            android:layout_alignParentStart="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintVertical_bias="0.917"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.198"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
         <ImageButton
             android:background="#00ffffff"
             android:id="@+id/next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/next"
-            android:layout_alignParentRight="true"/>
+            android:src="@drawable/nmusic"
+            android:layout_alignTop="@+id/play_button"
+            android:layout_toEndOf="@+id/play_button"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintHorizontal_bias="0.801"
+            app:layout_constraintVertical_bias="0.917"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
         <TextView
             android:id="@+id/show_name"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:gravity="center"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/pre_button" />
+            android:layout_height="30dp"
+            android:layout_alignBaseline="@+id/textView2"
+            android:layout_alignBottom="@+id/textView2"
+            android:layout_centerHorizontal="true"
+            android:maxLines="1"
+            android:textColor="@color/fontColor"
+            android:textSize="16sp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintVertical_bias="0.656"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
 
         <TextView
+            android:maxLines="1"
+            android:gravity="center_horizontal"
             android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/listview"
-            android:layout_toStartOf="@+id/pre_button"
-            android:gravity="center"
-            android:text="正在播放："
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp" />
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:textColor="@color/fontColor"
+            android:textSize="9sp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintVertical_bias="0.7"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
-    </RelativeLayout>
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+        <ImageView
+            android:id="@+id/disc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/turnplate"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintVertical_bias="0.183" />
+
+        <ImageView
+            android:id="@+id/needle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/pointer"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintHorizontal_bias="0.661"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+    </android.support.constraint.ConstraintLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:menu="@menu/nav_menu"
-        android:layout_gravity="start"></android.support.design.widget.NavigationView>
+        android:background="@color/white"
+        android:layout_gravity="start"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/number"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:textSize="36sp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/fontColor_2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="首"
+                android:textSize="15sp"
+                android:textColor="@color/fontColor_2"
+                android:layout_gravity="bottom"/>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            ></ListView>
+    </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

@@ -11,6 +11,15 @@ public class Song {
     private String uri;
     private String title;
     private String album;
+    private long duration;
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
 
     public void setTitle(String title) {
         this.title = title;
