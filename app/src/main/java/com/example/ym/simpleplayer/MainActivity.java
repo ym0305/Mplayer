@@ -2,19 +2,17 @@ package com.example.ym.simpleplayer;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.ComponentName;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.Image;
-import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,9 +30,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.w3c.dom.Text;
-
 import java.util.List;
+
+
+import static com.example.ym.simpleplayer.MyService.mediaPlayer;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -47,15 +47,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Toolbar toolbar;
     private TextView showName;
     private TextView musicNumber;
+    private TextView dura;
+    private TextView posi;
     private DrawerLayout drawerLayout;
     private ListView listView;
     private TextView artist;
-    public MyService musicService;
     private ObjectAnimator discAnimation;
-    private ObjectAnimator needleAnimation;
     private ImageView disc;
-    private ImageView needle;
 
+    private Mybroadcast mybroadcast;
+    private IntentFilter intentFilter;
 
     private static final String TAG = "MainActivity";
 
@@ -68,21 +69,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int isPlay = 0 ;
     private int isPause = 1;
     private int isReumse = 2;
-    private int isNext = 3;
-    private int isPre = 4;
 
 
-    private ServiceConnection sc = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            musicService = ( ( MyService.MusicService ) service ).getService();
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            musicService = null;
-        }
-    };
 
+    //初始化控件
     private void init(){
         pre = (ImageButton)findViewById(R.id.pre_button);
         next = (ImageButton)findViewById(R.id.next_button);
@@ -94,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawerLayout = (DrawerLayout)findViewById(R.id.drawerview);
         musicNumber = (TextView)findViewById(R.id.number);
         disc = (ImageView) findViewById(R.id.disc);
-        needle = (ImageView) findViewById(R.id.needle);
+        dura = (TextView)findViewById(R.id.dura_time);
+        posi = (TextView)findViewById(R.id.posi_time);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -110,9 +101,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("com.example.broadcast.UPDATE");
+        mybroadcast = new Mybroadcast();
+        registerReceiver(mybroadcast,intentFilter);
+
 
         init();
         setAnimations();
@@ -121,9 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         next.setOnClickListener(this);
         play.setOnClickListener(this);
 
-
-        musicService = new MyService();
-
         /**
          * 运行时权限
          */
@@ -131,11 +125,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ActivityCompat.requestPermissions(MainActivity.this,new String[]{
                     android.Manifest.permission.READ_EXTERNAL_STORAGE},1);
         }else {
-            bindConnect();
             initView();
+
         }
+
     }
 
+    //设置动画效果
     private void setAnimations() {
 
         discAnimation = ObjectAnimator.ofFloat(disc, "rotation", 0, 360);
@@ -143,20 +139,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         discAnimation.setInterpolator(new LinearInterpolator());
         discAnimation.setRepeatCount(ValueAnimator.INFINITE);
 
-        /*
-        needleAnimation = ObjectAnimator.ofFloat(needle, "rotation", 0, 25);
-        needle.setPivotX(0);
-        needle.setPivotY(0);
-        needleAnimation.setDuration(800);
-        needleAnimation.setInterpolator(new LinearInterpolator());
-        */
-    }
-
-
-    private void bindConnect(){
-        Intent intent = new Intent(this,MyService.class);
-        startService(intent);
-        bindService(intent , sc , BIND_AUTO_CREATE);
     }
 
     @Override
@@ -170,9 +152,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    /**
-     * 初始化界面
-     */
+
+    //初始化界面
     private void initView(){
 
         listView = (ListView) findViewById(R.id.list_view);
@@ -202,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     intent.putExtra("msg",isPlay);
                     play();
                     setText(i);
+
                     startService(intent);
 
                 }
@@ -228,8 +210,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
-        unbindService(sc);
+
         super.onDestroy();
+        unregisterReceiver(mybroadcast);
+
 
 
     }
@@ -300,17 +284,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startService(intent);
     }
 
+    //播放音乐
     public void play(){
         //needleAnimation.start();
+        handler.post(runnable);
         discAnimation.start();
 
     }
 
+    //下一首音乐
     private void nextMusic(Intent intent){
         if (position < length - 1) {
             position = position + 1;
             intent.putExtra("position", position);
-            intent.putExtra("msg", isNext);
+            intent.putExtra("msg", isPlay);
             setText(position);
             ChangeIcon(true);
             if(discAnimation != null) {
@@ -324,12 +311,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //上一首音乐
     private void preMusic(Intent intent){
         if (position > 0 ) {
             position = position - 1;
 
             intent.putExtra("position", position);
-            intent.putExtra("msg", isPre);
+            intent.putExtra("msg", isPlay);
             setText(position);
             ChangeIcon(true);
             if(discAnimation != null) {
@@ -345,10 +333,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.songList = songList;
     }
 
+    //修改textview与seekbar参数
     private void setText(int i){
         showName.setText(songList.get(i).getTitle());
         artist.setText(songList.get(i).getArtist());
+        seekBar.setMax((int)songList.get(i).getDuration());
+        String time = Time.format(songList.get(i).getDuration());
+        dura.setText(time);
+        Log.d(TAG, "setText: " + time );
+
 
     }
+
+    public android.os.Handler handler = new android.os.Handler();
+
+
+    public Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mediaPlayer != null) {
+
+
+                if (mediaPlayer.getCurrentPosition() > 0 && mediaPlayer.getCurrentPosition() < 3600000) {
+                    seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                    posi.setText(Time.format(mediaPlayer.getCurrentPosition()));
+                }
+
+            }
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser) {
+                        mediaPlayer.seekTo(seekBar.getProgress());
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            handler.postDelayed(runnable, 100);
+        }
+    };
+    protected void onResume() {
+        handler.post(runnable);
+        super.onResume();
+        Log.d("hint", "handler post runnable");
+    }
+
+
+
+    class Mybroadcast extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            position = intent.getIntExtra("position", -1 );
+            setText(position);
+        }
+    }
+
 
 }
